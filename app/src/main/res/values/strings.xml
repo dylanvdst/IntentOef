@@ -5,4 +5,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="push_to_talk">Push To Talk</string>
     <string name="not_available">Your device doesn\'t support speech input</string>
+    <string name="go_to_web">Go to Web</string>
+    <string name="contacts">Contacts</string>
+    <string name="dialer">Dialer</string>
+    <string name="search_google">Search Google</string>
+    <string name="no_webbrowser">You have no webbrowser installed, please install a webbrowser such as Chrome, Safari, ...</string>
+    <string name="no_url">Please insert a valid URL in the textfield above.</string>
+    <string name="http">http://</string>
+    <string name="no_support">Your phone doesn\'t support this action</string>
 </resources>

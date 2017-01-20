@@ -1,14 +1,19 @@
 package com.example.dylan.intentoefening.fragments;
 
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +32,28 @@ import static android.app.Activity.RESULT_OK;
 public class MainActivityFragment extends Fragment
 {
 
+
     @BindView(R.id.btnSpeek)
     Button btnSpeak;
     @BindView(R.id.txvOutput)
     TextView txvOutput;
+    @BindView(R.id.btnContacts)
+    Button btnContacts;
+    @BindView(R.id.btnDialer)
+    Button btnDialer;
+    @BindView(R.id.btnGoogle)
+    Button btnGoogle;
+    @BindView(R.id.btnWeb)
+    Button btnWeb;
+    @BindView(R.id.etGoogle)
+    EditText etGoogle;
+    @BindView(R.id.etWebURL)
+    EditText etWebUrl;
+    @BindView(R.id.tvContact)
+    TextView tvContact;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private static final int REQ_CODE_CONTACTS = 101 ;
 
     public MainActivityFragment()
     {
@@ -72,6 +93,93 @@ public class MainActivityFragment extends Fragment
         }
     }
 
+    @OnClick(R.id.btnWeb)
+    public void btnWebClick()
+    {
+        goToWebURL();
+    }
+
+    private void goToWebURL()
+    {
+        try
+        {
+            if(etWebUrl.getText().equals(null))
+            {
+                Toast.makeText(getActivity(), R.string.no_url, Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(etWebUrl.getText().toString()));
+                startActivity(intent);
+            }
+        } catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(getActivity(), R.string.no_webbrowser, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+    }
+
+    @OnClick(R.id.btnGoogle)
+    public void btnGoogleClick()
+    {
+        googleSearch();
+    }
+
+    private void googleSearch()
+    {
+        try
+        {
+            if(etGoogle.getText().equals(null))
+            {
+                Toast.makeText(getActivity(), R.string.no_url, Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                String word = etGoogle.getText().toString();
+                intent.putExtra(SearchManager.QUERY, word);
+                startActivity(intent);
+            }
+        } catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(getActivity(), R.string.no_webbrowser, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.btnDialer)
+    public void btnDialerClick()
+    {
+        dialer();
+    }
+
+    private void dialer()
+    {
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            startActivity(intent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(getActivity(), R.string.no_support, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.btnContacts)
+    public void btnContactsClick()
+    {
+        contacts();
+    }
+
+    private void contacts()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, REQ_CODE_CONTACTS);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -93,8 +201,23 @@ public class MainActivityFragment extends Fragment
                     }
                     break;
                 }
+                case REQ_CODE_CONTACTS:
+                {
+                    if (resultCode == RESULT_OK)
+                    {
+                        Uri contactData = data.getData();
+                        Cursor c = getActivity().managedQuery(contactData, null, null, null, null);
+                        if(c.moveToFirst())
+                        {
+                            tvContact.setText(c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                        }
+
+                    }
+                }
             }
         }
 
     }
+
+
 }
