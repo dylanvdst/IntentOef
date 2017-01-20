@@ -1,7 +1,9 @@
-package com.example.dylan.intentoefening;
+package com.example.dylan.intentoefening.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.dylan.intentoefening.R;
 
 public class MainActivity extends AppCompatActivity
 {
