@@ -81,7 +81,7 @@ public class MainActivityFragment extends Fragment
     public void startSpeech()
     {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "nl-NL");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
         try
@@ -197,6 +197,14 @@ public class MainActivityFragment extends Fragment
                     {
                         ArrayList<String> resultSTT = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                         String zin = resultSTT.get(0);
+                        switch (zin){
+                            case "go to contacts": contacts(); break;
+                            case "dial": dialer();break;
+                            case "search Google": googleSearch(); break;
+                            case "browse web": goToWebURL(); break;
+                            default: txvOutput.setText(zin); break;
+
+                        }
                         txvOutput.setText(zin);
                     }
                     break;
